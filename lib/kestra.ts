@@ -1,12 +1,26 @@
 import fs from "fs";
 import path from "path";
 
-export async function runKestraFlow(flowId: string, payload: any) {
-  // 1. Load the YAML flow (simulating real Kestra)
-  const filePath = path.join(process.cwd(), "src/lib/flows", `${flowId}.yml`);
+export interface KestraFlowExecution {
+  flowId: string;
+  executedAt: Date;
+  payloadReceived: Record<string, any>;
+  flowDefinition: string;
+  result: any; // will hold AI processed results
+}
+
+export async function runKestraFlow(
+  flowId: string,
+  payload: Record<string, any>
+): Promise<KestraFlowExecution> {
+  // 1. Load YAML flow
+  const filePath = path.join(process.cwd(), "lib/flows", `${flowId}.yml`);
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Kestra flow file not found: ${filePath}`);
+  }
+
   const flowDef = fs.readFileSync(filePath, "utf-8");
 
-  // 2. Basic mock — you can enhance later
   console.log("Executing Kestra Flow:", flowId);
 
   return {
@@ -14,6 +28,6 @@ export async function runKestraFlow(flowId: string, payload: any) {
     executedAt: new Date(),
     payloadReceived: payload,
     flowDefinition: flowDef,
-    result: null,  // actual AI logic handled by Next.js endpoints
+    result: null, // actual AI logic handled by Next.js endpoints
   };
 }

@@ -1,0 +1,18 @@
+id: summarize-logs
+namespace: socai.dev
+
+description: |
+  Mock Kestra flow that simulates log summarization.
+
+tasks:
+  - id: load_text
+    type: io.kestra.mock.tasks.LoadText
+    message: "Loading log text..."
+
+  - id: summarize
+    type: io.kestra.mock.tasks.Summarize
+    message: "Summarizing log content..."
+
+  - id: done
+    type: io.kestra.core.tasks.log.Log
+    message: "Summary generated successfully."

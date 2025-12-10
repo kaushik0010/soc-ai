@@ -1,0 +1,18 @@
+id: classify-event
+namespace: socai.dev
+
+description: |
+  Mock Kestra flow that simulates event classification.
+
+tasks:
+  - id: start
+    type: io.kestra.core.tasks.log.Log
+    message: "Starting event classification..."
+
+  - id: classify
+    type: io.kestra.mock.tasks.Classify
+    message: "Classifying event severity and category..."
+
+  - id: finish
+    type: io.kestra.core.tasks.log.Log
+    message: "Classification completed."

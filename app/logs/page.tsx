@@ -1,5 +1,5 @@
 // src/app/logs/page.tsx
-import LogsClient from "@/components/LogsClient";
+import LogsClient from "@/components/logs/LogsClient";
 import React from "react";
 import { Suspense } from "react";
 

@@ -1,0 +1,10 @@
+id: disable-user
+namespace: socai.remediation
+
+description: |
+  Simulates disabling a compromised user account.
+
+tasks:
+  - id: start_disable
+    type: io.kestra.core.tasks.log.Log
+    message: "ACTION: Disable user account {{ trigger.body.target }} initiated."

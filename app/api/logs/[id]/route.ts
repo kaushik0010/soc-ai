@@ -1,15 +1,18 @@
 // src/app/api/logs/[id]/route.ts
-import { NextRequest, NextResponse } from "next/server";
+
+import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { LogEntry } from "@/models/LogEntry.model";
 import mongoose from "mongoose";
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     await connectDB();
 
-    const { pathname } = new URL(req.url);
-    const id = pathname.split("/").pop();
+    const id = params.id;
 
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(

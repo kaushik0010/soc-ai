@@ -1,0 +1,18 @@
+id: create-ticket-jira
+namespace: system
+description: |
+  Simulates creating a high-priority ticket in an external system like Jira.
+# 🚨 ADD THIS INPUTS SECTION 🚨
+inputs:
+  - id: target
+    type: STRING
+    required: true
+  - id: incidentId
+    type: STRING
+    required: true
+
+tasks:
+  - id: start_ticket
+    type: io.kestra.core.tasks.log.Log
+    # UPDATE the message to use the simpler 'inputs' variable
+    message: "ACTION: Creating ticket for incident {{ inputs.incidentId }}. Target: {{ inputs.target }}"

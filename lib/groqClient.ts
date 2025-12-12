@@ -25,9 +25,9 @@ const MAX_RETRIES = 2; // Allow one initial try + one retry for stability
 export async function groqTriageAndStructure(logText: string, pastContext: string = ""): Promise<GroqTriageResult> {
   // Define available flow IDs for the agent to include in suggestedActions
   const AVAILABLE_KESTRA_FLOWS = {
-    BLOCK_IP: "socai.remediation.block-ip",
-    DISABLE_USER: "socai.remediation.disable-user",
-    CREATE_TICKET: "socai.remediation.create-ticket-jira",
+    BLOCK_IP: "system.block-ip",
+    DISABLE_USER: "system.disable-user",
+    CREATE_TICKET: "system.create-ticket-jira",
   };
 
   // 1. Define the System Prompt
@@ -40,7 +40,8 @@ export async function groqTriageAndStructure(logText: string, pastContext: strin
   --- CRITICAL CONSTRAINTS ---
   1. actionId: MUST be a universally unique identifier (UUID).
   2. Action Type: The 'type' field MUST be one of the exact strings: 'block_ip', 'disable_user', 'isolate_host', or 'create_ticket'.
-  3. Kestra Flow IDs: You MUST populate the 'kestraFlowId' field with the correct flow ID from this list:
+  3. POLICY RULE: For non-security/connectivity errors (e.g., timeouts, latency issues, 504 errors) involving internal services, you MUST prioritize the 'create_ticket' action over containment actions like 'block_ip'. A service name is NOT a valid target for a 'block_ip' action.
+  4. Kestra Flow IDs: You MUST populate the 'kestraFlowId' field with the correct flow ID from this list:
      - 'block_ip' action uses flow ID: "${AVAILABLE_KESTRA_FLOWS.BLOCK_IP}"
      - 'disable_user' action uses flow ID: "${AVAILABLE_KESTRA_FLOWS.DISABLE_USER}"
      - 'create_ticket' action uses flow ID: "${AVAILABLE_KESTRA_FLOWS.CREATE_TICKET}"
@@ -71,9 +72,9 @@ export async function groqTriageAndStructure(logText: string, pastContext: strin
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       const completion = await groq.chat.completions.create({
-        model: "llama-3.1-8b-instant",
+        model: "llama-3.3-70b-versatile",
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: systemPrompt + " You MUST only respond with a single JSON object that conforms to the Incident schema. DO NOT include any explanatory text, markdown formatting (```json), or tool-call wrappers." },
           { role: "user", content: userPrompt },
         ],
         tools: [triageTool],

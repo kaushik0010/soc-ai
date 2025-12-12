@@ -1,0 +1,18 @@
+id: block-ip
+namespace: system
+
+description: |
+  Simulates blocking a malicious IP address as orchestrated by the SOC-AI Response Agent.
+
+inputs:
+  - id: target
+    type: STRING
+    required: true
+  - id: incidentId
+    type: STRING
+    required: true
+
+tasks:
+  - id: start_block
+    type: io.kestra.core.tasks.log.Log
+    message: "ACTION: Block IP address {{ inputs.incidentId }}. Target: {{ inputs.target }}"

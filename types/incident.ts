@@ -1,4 +1,3 @@
-// types/incident.ts
 import { z } from "zod";
 
 // --- Sub-Schemas ---
@@ -7,17 +6,30 @@ import { z } from "zod";
 export const IocSchema = z.object({
   type: z.enum(["ip", "domain", "hash", "user", "file_path"]).describe("The type of IOC."),
   value: z.string().describe("The identified value (e.g., '192.168.1.1')."),
-  confidence: z.number().min(0).max(100).default(75).describe("Confidence score (0-100)."),
+  confidence: z.number().int().min(0).max(100).default(75).describe("Confidence score (0-100)."),
 });
+export type Ioc = z.infer<typeof IocSchema>;
+
+
+// MITRE Technique (NEW SCHEMA TO MATCH AI OUTPUT)
+// The AI generates this as an object, not a string, so we define it as an object.
+export const MitreTechniqueSchema = z.object({
+  value: z.string().describe("The MITRE ATT&CK T-Code or technique identifier (e.g., T1078.001)."),
+  confidence: z.number().int().min(0).max(100).optional().describe("Confidence score (0-100) that this technique is relevant."),
+});
+export type MitreTechnique = z.infer<typeof MitreTechniqueSchema>;
+
 
 // Containment Action (Suggested or Executed)
 export const SuggestedActionSchema = z.object({
   actionId: z.string().uuid().describe("Unique ID for the suggested action."),
   type: z.enum(["block_ip", "disable_user", "isolate_host", "create_ticket"]).describe("The type of action."),
-  target: z.string().describe("The target of the action (e.g., 'user_id', 'ip_address')."),
+  target: z.string().describe("The target of the action (e.g., 'user_id', 'ip_address', 'server_name')."),
   justification: z.string().describe("The LLM's justification for the action."),
   kestraFlowId: z.string().optional().describe("The Kestra flow to execute this action."),
 });
+export type SuggestedAction = z.infer<typeof SuggestedActionSchema>;
+
 
 // --- Primary Incident Schema ---
 
@@ -28,13 +40,14 @@ export const IncidentSchema = z.object({
   severity: z.enum(["Low", "Medium", "High", "Critical", "Informational"]).describe("The calculated severity based on log context."),
   summary: z.string().describe("A concise, human-quality summary of the detected activity."),
 
-  // ADDED: Status field to the Zod Schema
+  // Metadata fields
   status: z.enum(["New", "Triaged", "Investigating", "Contained", "Closed"]).default("New").describe("The current status of the incident."),
   logEntryIds: z.array(z.string()).optional().describe('List of LogEntry IDs clustered into this incident (Populated by backend code).'),
 
   // Investigation/Enrichment fields
   iocs: z.array(IocSchema).describe("List of discovered Indicators of Compromise."),
-  mitreTechniques: z.array(z.string()).describe("List of potential MITRE ATT&CK T-Codes."),
+  // 🚨 FIX HERE: Changed from z.array(z.string()) to z.array(MitreTechniqueSchema)
+  mitreTechniques: z.array(MitreTechniqueSchema).describe("List of potential MITRE ATT&CK techniques with confidence."),
   suggestedActions: z.array(SuggestedActionSchema).describe("Automated suggested next steps."),
 });
 

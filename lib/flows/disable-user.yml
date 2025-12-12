@@ -1,0 +1,18 @@
+id: disable-user
+namespace: system
+
+description: |
+  Simulates disabling a compromised user account.
+
+inputs:
+  - id: target
+    type: STRING
+    required: true
+  - id: incidentId
+    type: STRING
+    required: true
+
+tasks:
+  - id: start_disable
+    type: io.kestra.core.tasks.log.Log
+    message: "ACTION: Disable user account {{ inputs.incidentId }}. Target: {{ inputs.target }}"

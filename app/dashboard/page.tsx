@@ -5,6 +5,7 @@ import { fetcher } from '@/utils/fetcher';
 import TrendChart from '@/components/dashboard/TrendChart';
 import SeverityPie from '@/components/dashboard/SeverityPie';
 import KestraStatusWidget from '@/components/dashboard/KestraStatusWidget';
+import SecurityProTip from '@/components/dashboard/SecurityProTip';
 
 // Define the expected structure of your API response for type safety
 interface DashboardData {
@@ -120,6 +121,8 @@ export default async function DashboardPage() {
                         />
                     </div>
                 </div>
+
+                <SecurityProTip />
             </div>
 
             {/* --- 3. KESTRA STATUS WIDGET --- */}

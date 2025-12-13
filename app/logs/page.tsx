@@ -1,4 +1,5 @@
 // src/app/logs/page.tsx
+import LogPlayground from "@/components/logs/LogPlayground";
 import LogsClient from "@/components/logs/LogsClient";
 import React from "react";
 import { Suspense } from "react";
@@ -10,6 +11,7 @@ export const metadata = {
 export default async function LogsPage() {
   return (
     <main className="p-6 max-w-6xl mx-auto">
+      <LogPlayground />
       <h1 className="text-2xl font-semibold mb-4">Logs</h1>
 
       <div className="space-y-4">

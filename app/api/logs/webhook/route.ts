@@ -4,6 +4,7 @@ import { LogEntry } from "@/models/LogEntry.model";
 import { IncidentModel } from "@/models/Incident.model";
 import { groqTriageAndStructure } from "@/lib/groqClient";
 import { v4 as uuidv4 } from 'uuid';
+import { oumiTriageAndStructure } from "@/lib/oumiClient";
 
 /**
  * Handles incoming log data from external systems (e.g., SIEM, firewalls) via webhook.
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
         let triageError: string | null = null;
 
         // 2️⃣ Execute Triage Agent for structured incident creation (with retry logic)
-        const triageResult = await groqTriageAndStructure(log.rawText);
+        const triageResult = await oumiTriageAndStructure(log.rawText);
 
         if (triageResult.success && triageResult.incident) {
             // Triage SUCCESS: Save the Incident

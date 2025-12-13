@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Copy, Trash2, RefreshCcw, Zap, AlertTriangle, CheckCircle } from "lucide-react";
 import axios from "axios";
 import { Separator } from "@/components/ui/separator"; // Assuming you have a Separator component from shadcn/ui
+// 🚨 IMPORT THE NEW MODAL 🚨
+import OumiFeedbackModal from "./OumiFeedbackModal"; 
 
 // --- NEW/UPDATED TYPES ---
 
@@ -81,27 +83,31 @@ export default function LogDetailDrawer({ open, onClose, log, onDelete, onUpdate
   const [actionStatus, setActionStatus] = useState<Record<string, 'pending' | 'success' | 'error'>>({});
 
   // ⭕ Fetch Incident details when a new log is selected
-  useEffect(() => {
+  const fetchIncidentDetails = () => {
     if (log?._id) {
-      setIncident(null); // Clear previous incident
-      setLoadingIncident(true);
-      axios.get(`/api/incidents/${log._id}`)
-        .then(res => {
-          if (res.data.success) {
-            setIncident(res.data.incident as IncidentItem);
-          } else {
-            console.warn(res.data.message);
-            setIncident(null);
-          }
-        })
-        .catch(err => {
-          console.error("Failed to fetch incident:", err);
-          setIncident(null);
-        })
-        .finally(() => {
-          setLoadingIncident(false);
-        });
+        setIncident(null); // Clear previous incident
+        setLoadingIncident(true);
+        axios.get(`/api/incidents/${log._id}`)
+            .then(res => {
+                if (res.data.success) {
+                    setIncident(res.data.incident as IncidentItem);
+                } else {
+                    console.warn(res.data.message);
+                    setIncident(null);
+                }
+            })
+            .catch(err => {
+                console.error("Failed to fetch incident:", err);
+                setIncident(null);
+            })
+            .finally(() => {
+                setLoadingIncident(false);
+            });
     }
+  }
+
+  useEffect(() => {
+    fetchIncidentDetails();
   }, [log?._id]);
 
   // Reset action status when drawer closes
@@ -193,7 +199,16 @@ export default function LogDetailDrawer({ open, onClose, log, onDelete, onUpdate
           {/* Triage Report / Incident Details */}
           {incident ? (
             <div className="space-y-4">
-
+                {/* 🚨 INTEGRATION POINT: OUMI FEEDBACK MODAL 🚨 */}
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-bold">Triage Report</h2>
+                    {/* Show the RL Feedback button only if an incident is loaded */}
+                    <OumiFeedbackModal 
+                        incidentId={incident.incidentId} 
+                        onFeedbackSubmitted={fetchIncidentDetails} // Refetch incident after submission (optional)
+                    />
+                </div>
+                <Separator />
               {/* Severity & Status */}
               <div className="flex gap-2 items-center flex-wrap">
                 {incident.severity && (

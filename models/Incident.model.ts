@@ -32,6 +32,20 @@ const SuggestedActionMongooseSchema = new Schema(
   { _id: false }
 );
 
+// Define Mongoose Schema for MitreTechnique
+const MitreTechniqueMongooseSchema = new Schema({
+  value: {
+    type: String,
+    required: true,
+  },
+  confidence: {
+    type: Number,
+    min: 0,
+    max: 100,
+    default: 75,
+  }
+}, { _id: false });
+
 // Define Primary Incident Schema
 const IncidentSchema = new Schema<Incident & Document>(
   {
@@ -49,15 +63,32 @@ const IncidentSchema = new Schema<Incident & Document>(
     },
     summary: { type: String, required: true },
     // Link logs via their IDs
-    logEntryIds: [{ type: Schema.Types.ObjectId, ref: "LogEntry" }], 
-    iocs: [IocMongooseSchema],
-    mitreTechniques: [{ type: String }],
-    suggestedActions: [SuggestedActionMongooseSchema],
+    logEntryIds: [{ type: Schema.Types.ObjectId, ref: "LogEntry" }],
+
+    // 🚨 Consistency Fix: Apply required: true, default: [] to all array subdocuments
+    iocs: {
+      type: [IocMongooseSchema],
+      required: true,
+      default: []
+    },
+
+    mitreTechniques: {
+      type: [MitreTechniqueMongooseSchema],
+      required: true,
+      default: []
+    },
+
+    suggestedActions: {
+      type: [SuggestedActionMongooseSchema],
+      required: true,
+      default: []
+    },
   },
   { timestamps: true }
 );
 
-// Prevent re-registering model on hot reload
-export const IncidentModel: Model<Incident & Document> =
-  (mongoose.models.Incident as Model<Incident & Document>) ||
-  mongoose.model<Incident & Document>("Incident", IncidentSchema);
+const modelName = "Incident";
+
+export const IncidentModel: Model<Incident & Document> = 
+    (mongoose.models[modelName] as Model<Incident & Document>) || 
+    mongoose.model<Incident & Document>(modelName, IncidentSchema);

@@ -6,7 +6,7 @@
 
 | Resource | Link |
 | :--- | :--- |
-| **Live Application** | `[Your Vercel/Live URL Here]` |
+| **Live Application** | `https://soc-ai-bice.vercel.app/` |
 | **YouTube Demo** | `https://youtu.be/LbuHXiPznJE` |
 
 ---

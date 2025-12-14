@@ -2,47 +2,83 @@
 
 **Project Goal:** To transform raw, noisy security logs into structured, actionable intelligence and automated remediation actions in under a second, making security operations scalable and accessible for small-to-medium businesses (SMBs).
 
-## ✨ Core Architecture and Technology Stack
+## 🎬 Demo Video & Live Link
 
-SOC-AI leverages the high-speed processing of Groq and the orchestration power of Kestra to deliver real-time security automation.
-
-* **Frontend:** Next.js, React, TypeScript, Tailwind CSS
-* **Backend/API:** Next.js Route Handlers, TypeScript
-* **Database:** MongoDB (for persistent log and incident storage)
-* **Core AI Engine:** **Groq** (using `llama-3.3-70b-versatile` for sub-second, highly reliable structured triage)
-* **Orchestration Engine:** **Kestra** (for managing and executing automated remediation flows)
-* **Visualization:** Custom Next.js components and charts (for the Dashboard)
+| Resource | Link |
+| :--- | :--- |
+| **Live Application** | `[Your Vercel/Live URL Here]` |
+| **YouTube Demo** | `https://youtu.be/LbuHXiPznJE` |
 
 ---
 
-## Day 5: Final Polish, Autonomous Triage & Deployment Readiness
+## 🛑 The Problem
 
-This day focused entirely on transforming the functional prototype into a polished, market-ready product, demonstrating a robust, end-to-end autonomous security platform.
+Security Operations Centers (SOCs) face two critical, compounding challenges:
 
-### ✨ Key Features Implemented
+1.  **Alert Fatigue:** Security analysts are overwhelmed by thousands of false positives and raw, unstructured logs, leading to burnout and missed critical incidents.
+2.  **Slow Response:** Manual triage and remediation (blocking an IP, creating a ticket) takes minutes or hours. In an age of automated attacks, this latency is unacceptable, leading to extended security breaches.
 
-| Feature Area | Achievement | Technical Implementation |
+## ✅ The Solution: Autonomous Security Operations
+
+The **SOC-AI Platform** solves this by enforcing an **Intelligent, Human-Governed Automation** pipeline:
+
+1.  **High-Speed Triage:** We use **Groq** to instantly convert raw, unstructured logs into structured, actionable JSON data (Severity, IOCs, Action).
+2.  **Human-in-the-Loop (HITL) Safety:** The AI suggests the action, but **Kestra** executes the critical remediation flow only after an analyst provides explicit sign-off, ensuring auditability and safety.
+3.  **Continuous Improvement:** A built-in Reinforcement Learning (RL) loop allows analysts to correct the AI's triage, guaranteeing the system learns and improves with every incident.
+
+---
+
+## 🏗️ Core Architecture and Technology Stack
+
+SOC-AI leverages a specialized, high-performance stack, treating both the AI and Orchestrator as specialized microservices. [Image of SOC-AI Platform Architecture]
+
+### Technology Stack
+
+| Component | Technology | Role |
 | :--- | :--- | :--- |
-| **User Experience (UX)** | **Professional Landing Page:** Replaced the default Next.js page with a professional, modular, high-conversion landing page. | Created modular components (`HeroSection`, `HowItWorksSection`, etc.) and established a global `Header` and `Footer` in `app/layout.tsx`. |
-| **Data Integrity** | **Mongoose Schema Fixes:** Resolved critical database `CastError` issues by enforcing strict typing on array sub-documents. | Defined explicit Mongoose sub-schemas (`MitreTechniqueMongooseSchema`) and used the stable pattern: `type: [Schema], required: true, default: []`. |
-| **Visualization** | **Shadcn/Recharts Trend Chart:** Upgraded the manual bar chart to use `shadcn/ui ChartContainer` and `Recharts`, adding tooltips and dynamic color spiking. | Replaced custom rendering with industry-standard, responsive charting components for better performance and presentation. |
-| **Security Posture** | **Information Hiding:** Removed sensitive internal MongoDB `_id` values from the frontend output panel. | Updated `LogPlayground.tsx` to log internal IDs to the console only, and display only the shortened, public-facing Incident UUID. |
-| **Product Readiness** | **SaaS Architecture:** Confirmed the project model is structured as a scalable SaaS offering, ready for multi-tenancy integration via Webhooks. | Formalized the integration model for the final presentation, emphasizing ease of use for small companies (SMBs). |
+| **Frontend** | Next.js 15, React, Tailwind CSS | Professional, modular UI/UX with global layout consistency. |
+| **Backend/API** | Next.js Route Handlers, TypeScript | Secure intake via Webhooks and management of data between services. |
+| **Database** | MongoDB & Mongoose | Persistent and highly reliable storage for Logs and Incidents. |
+| **Core AI Engine** | **Groq** (`llama-3.3-70b-versatile`) | Sub-second, low-latency, highly reliable **Structured Triage**. |
+| **Orchestration** | **Kestra** | The **Execution Agent** that manages and executes secure remediation flows (e.g., `block-ip`). |
+| **Visualization** | Shadcn/Recharts | Industry-standard visualization for Log Trends and Kestra Status. |
 
----
+### The Automation Loop (The Formula)
 
-### 🔨 Core Architectural Fixes & Polish
+The platform's efficiency is based on this core, specialized pipeline:
 
-1.  **Mongoose Reliability:** The Mongoose schema for the `Incident` model is now finalized and fully robust against inconsistent LLM output, guaranteeing data integrity.
-2.  **Global UI Layout:** All common UI elements were correctly migrated to `app/layout.tsx` for consistency and optimal performance across all routes.
-3.  **Component Modularization:** All major UI sections were split into dedicated components, significantly boosting code maintainability and adherence to the Single Responsibility Principle.
-
-### 🚀 Conclusion: Autonomous and Production-Ready
-
-The SOC-AI Platform stands as a complete, autonomous solution demonstrating the full life cycle of an incident:
 $$\text{Ingest Logs} \xrightarrow{\text{Groq/Oumi Triage}} \text{Structured Decision} \xrightarrow{\text{Kestra Execution Agent}} \text{Autonomous Action}$$
 
-This architecture provides a superior foundation for future scaling and feature development, proving the viability of the **Autonomous SOC** model.
+---
+
+## ✨ Key Features & Autonomous Intelligence
+
+### 1. **Intelligent Triage & Decision-Making**
+
+The Groq/Oumi Triage Agent is designed for reliable output:
+
+* **Structured Output:** Uses Zod schemas to enforce clean JSON output, eliminating unreliable text summarization and generating structured fields (Severity, IOCs, MITRE Techniques).
+* **Data Integrity:** Mongoose schema is hardened with explicit array sub-documents and stable patterns to ensure data stability from the LLM output.
+
+### 2. **Human-in-the-Loop (HITL) Execution**
+
+We integrate Kestra as a final security guardrail:
+
+* **Auditable Action:** The AI suggests an action, but the Kestra flow is triggered only when the analyst manually clicks **"Approve & Run Kestra Flow"** in the log drawer, ensuring all critical actions are human-governed.
+* **Kestra Status:** The Dashboard provides real-time status of all Kestra executions, confirming the success or failure of autonomous actions.
+
+### 3. **Continuous Reinforcement Learning**
+
+* **Oumi Feedback Model:** Analysts use the **Oumi Feedback Model** located within the log detail drawer to submit corrections (e.g., overriding Severity or adding a MITRE Technique).
+* **Granular Training:** This per-log feedback provides high-quality data for DPO/RLHF, continuously training the AI Agent and improving future triage accuracy.
+
+---
+
+## 🚀 Future Scope
+
+1.  **Multi-Tenancy:** Implement `clientId` on log ingestion and use it to filter all dashboard/log queries, enabling a true multi-tenant SaaS deployment.
+2.  **Kestra Dynamic Targets:** Enhance Kestra flows to accept and execute remediation actions on dynamic cloud environments (e.g., dynamically blocking an IP in an AWS Security Group or Azure NSG).
+3.  **Advanced LLM Chaining:** Implement a secondary validation LLM (Guardrail Agent) to verify the suggested action before it's presented to the human analyst.
 
 ---
 
@@ -77,11 +113,12 @@ This architecture provides a superior foundation for future scaling and feature 
     # Kestra API (Localhost default)
     KESTRA_USERNAME=admin
     KESTRA_PASSWORD=admin
+
+    NEXT_PUBLIC_API_URL="http://localhost:3000/api"
+    KESTRA_API_URL="http://localhost:8080/api/v1"
     ```
 4.  **Run the application:**
     ```bash
     pnpm dev
     ```
 5.  **View the Dashboard:** Navigate to `http://localhost:3000/dashboard`
-
----

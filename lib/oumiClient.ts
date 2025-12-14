@@ -37,14 +37,13 @@ export async function provideOumiRlFeedback(
 ): Promise<{ success: boolean; message: string }> {
     // --- START OF RL QUEUE SIMULATION ---
     console.log(`\n======================================================`);
-    console.log(`Oumi RL FEEDBACK INGESTION: Incident ${incidentId}`);
+    console.log(`Oumi RL FEEDBACK INGESTION: Incident new-incident`);
     console.log(`======================================================`);
     
     // In a real system, this data would be serialized and sent to a dedicated
     // Oumi/Kestra workflow for asynchronous model retraining (RLHF/DPO).
     
     const feedbackData = {
-        incidentId,
         analystDecision,
         // The data that Oumi would use for Reinforcement Learning (RL) fine-tuning:
         rl_data_type: "Human Preference (DPO/RLHF)",

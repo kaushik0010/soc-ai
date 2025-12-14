@@ -1,4 +1,6 @@
 // components/OumiFeedbackModal.tsx
+'use client'
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -78,7 +80,7 @@ const OumiFeedbackModal: React.FC<OumiFeedbackModalProps> = ({ incidentId, onFee
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" className="bg-orange-500 hover:bg-orange-600 text-white">
-                    <Zap className="w-4 h-4 mr-2" /> Override AI (RL Feedback)
+                    <Zap className="w-4 h-4 mr-2" /> Override AI Feedback
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">

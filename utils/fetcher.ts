@@ -1,9 +1,3 @@
-// utils/fetcher.ts
-// Utility to simplify fetching data from the internal API routes
-
-// Ensure you have NEXT_PUBLIC_API_URL set in your .env.local file
-// Example: NEXT_PUBLIC_API_URL=http://localhost:3000/api 
-
 export async function fetcher<T>(endpoint: string): Promise<T> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
   
